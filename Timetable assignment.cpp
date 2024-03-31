@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <fstream>
 using namespace std;
 
 struct TimeSlot {
@@ -194,27 +195,74 @@ public:
     }
 };
 
+Student** read_students(string filename, int& count){
+	
+	fstream input_file;
+	input_file.open(filename,ios::in);
+	
+	if(!input_file.is_open()){
+		cout << "ERROR WHILE OPENING THE FILE" <<endl;
+		exit(EXIT_FAILURE);;
+	}
+    count = 0;
+    string line;
+    while (getline(input_file, line)) {
+        count++;
+    }
+    input_file.clear();   
+    input_file.seekg(0);  // Stream position is resetted here to read the file from the begining 
+
+    Student** students = new Student*[count];
+	string temp; //to store the row of file
+    for (int i = 0; i < count; ++i) {
+        getline(input_file,temp );
+		string name_section[2] = {"",""} ;
+		int index = 0;
+		for (int j = 0; j < temp.length( ) ;j++){ // breaking the row string to name and section
+			if(temp[j] == ','){
+				j++;
+				index = 1;
+			}
+			name_section[index] +=temp[j];
+		}
+        students[i] = new Student(name_section[0], name_section[1]);
+    }
+
+    input_file.close();
+    return students;
+}
+void deleteStudents(Student** students, int count) {
+    for (int i = 0; i < count; ++i) {
+        delete students[i];
+    }
+    delete[] students;
+}
+
 int main() {
+int count;
+    string filename = "C:/Users/Admin/Desktop/Re file handling/students.txt"; 
+    Student** students = read_students(filename, count);
+    
 
-    Student* student1 = new Student("Student_Hajra","BSE-4");
-    //Student student1("Student_Hajira","A");
-    Student* student2 = new Student("Student_Moiza","BSE-2A");
-    Student* student3 = new Student("Student_Mubrra","BSE-8");
-    Student* student4 = new Student("Student_Atqa","BSE-2B");
-    Student* student5 = new Student("Student_5","BSE-2B");
-
-    Teacher* teacher1 = new Teacher("Faizan");
-    Teacher* teacher2 = new Teacher("Harris");
-
-    Course* course1 = new Course("DS");
-    Course* course2 = new Course("OOP");
-    Course* course3 = new Course("LA");
-    Course* course4 = new Course("OOPLab");
+    Teacher* teacher1 = new Teacher("Tamim Ahmed");
+    Teacher* teacher2 = new Teacher("Awais");
+    Teacher* teacher3 = new Teacher("Adeel");
+    Teacher* teacher4 = new Teacher("Sadaf");
+    Teacher* teacher5 = new Teacher("Joddat Fatima");
+    Teacher* teacher6 = new Teacher("Waleed");
+	//Courses
+    Course* course1 = new Course("OOP");
+    Course* course2 = new Course("OOPLab");
+    Course* course3 = new Course("DS");
+    Course* course4 = new Course("ISE");
+    Course* course5 = new Course("DM");
+    Course* course7 = new Course("CF");
+    Course* course8 = new Course("ML");
     
 	//rooms
     Room* room1 = new Room("4-17");
     Room* room2 = new Room("4-18");
-   // Room* room3 = new Room("4-19");
+    Room* room3 = new Room("4-19");
     
     //Labs
     Room* lab1 = new Room("401");
@@ -223,11 +271,29 @@ int main() {
     
     Timetable timetable;
 
-    timetable.addEntry(teacher1, course1, room1, {"Monday", "8:30"}, {student1, student2});
-    timetable.addEntry(teacher2, course2, room2, {"Tuesday", "10:00"}, {student1});
-	timetable.addEntry(teacher1, course3, lab1, {"Wednesday", "10:00"}, {student4, student3});
-	timetable.addEntry(teacher2, course2, room2, {"Monday", "10:00"}, {student1, student2});
-	timetable.addEntry(teacher1, course4, lab2, {"Tuesday", "10:00"}, {student1, student2,student3, student4,student5});
+   timetable.addEntry(teacher1, course1, room3, {"Monday", "10:30-12:25"}, {students[0], students[2],students[3]});
+  timetable.addEntry(teacher1, course1, room3, {"Tuesday", "11:30-12:25"}, {students[0], students[2],students[3]});
+	timetable.addEntry(teacher1, course1, room3, {"Monday", "8:30-10:25"}, {students[5],students[9]});
+	timetable.addEntry(teacher1, course1, room3, {"Tuesday", "12:30-1:25"}, {students[5],students[9]});
+
+	timetable.addEntry(teacher2, course4, room1, {"Monday", "8:30-10:25"}, {students[0], students[1],students[2], students[3],students[4]});
+  timetable.addEntry(teacher2, course4, room1, {"Tuesday", "10:30-11:30"}, {students[0], students[1],students[2], students[3],students[4]});
+  timetable.addEntry(teacher2, course4, room2, {"Monday", "11:30-1:30"}, {students[5], students[6],students[7], students[8],students[9]});
+	timetable.addEntry(teacher2, course4, room2, {"Tuesday", "11:30-12:30"}, {students[5], students[6],students[7], students[8],students[9]});
+
+	timetable.addEntry(teacher3, course5, room2, {"Wednesday", "8:30-9:30"}, {students[22], students[23],students[20],students[21]});
+  timetable.addEntry(teacher3, course5, room2, {"Thursday", "8:30-10:30"}, {students[22], students[23],students[20],students[21]});
+
+	timetable.addEntry(teacher4, course3, room1, {"Tuesday", "12:30-1:30"}, {students[0], students[1],students[2], students[3],students[4]});
+	timetable.addEntry(teacher4, course3, room1, {"Friday", "8:30-10:30"}, {students[0], students[1],students[2], students[3],students[4]});
+  timetable.addEntry(teacher4, course3, room2, {"Monday", "10:30-11:25"}, {students[5], students[6],students[7], students[8],students[9]});
+	timetable.addEntry(teacher4, course3, room3, {"Tuesday", "9:30-11:25"}, {students[5], students[6],students[7], students[8],students[9]});
+
+  timetable.addEntry(teacher5, course7, room2, {"Wednesday", "10:30-11;25"}, {students[6]});
+  timetable.addEntry(teacher4, course8, room3, {"Tuesday", "2:30-4:25"}, {students[15], students[16],students[17], students[18],students[19]});
+
+  timetable.addEntry(teacher6, course2, lab1, {"Thursday", "8:30-11:25"}, {students[0], students[2],students[3]});
+	timetable.addEntry(teacher6, course2, lab2, {"Thursday", "11:30-2:25"}, {students[5],students[9]});
 
 	
 	cout << "*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*"<<endl;
@@ -237,71 +303,118 @@ int main() {
 	
 	
 	// REQUIRED QUERIES
-	
+	int num;
+  cout<<"\n1- Teacher wise time table.\n2- Section wise time table\n3- Student wise time table \n4- Room wise and Lab wise\n";
+  cout<<"5- Who is teaching on any specific time and day (8:30 on Monday) ?\n6- What is the time table for specific day(Tuesday)?\n ENTER 0 TO EXIT.\n";
+
+  while(1){
+  cout<<"\n\nEnter choice: ";
+  cin>>num;
+
+  if(num==1){
+    fstream teacherwise_file;
+	teacherwise_file.open("Teacher wise Timetable.txt",ios::out);
 	//Teacher wise time table 
     map<string, vector<TimetableEntry*>> teacherTimetable = timetable.getTeacherWiseTimetable();
-    cout << "\n\nTeacher wise timetable:" << endl << endl;
+    cout << "\n~~~Teacher wise timetable~~~" << endl << endl;
     for (auto pair : teacherTimetable) {
         cout << pair.first << ":" << endl;
         for (TimetableEntry* entry : pair.second) {
             cout << "  " << entry->getTimeslot() << " - " << entry->getCourseName() << " - " << entry->getRoomName() << endl;
         }
     }
+	   cout<<"\n***********************************";
+    teacherwise_file.close();
+  }
 
+	else if(num==2){  
     //Section wise time table 
     map<string, vector<TimetableEntry*>> sectionTimetable = timetable.getSectionWiseTimetable();
-    cout << "\n\nSection wise timetable:" << endl << endl;
+    cout << "\n~~~Section wise timetable~~~" << endl << endl;
     for (auto pair : sectionTimetable) {
         cout << pair.first << ":" << endl;
         for (TimetableEntry* entry : pair.second) {
             cout << "  " << entry->getTimeslot() << " - " << entry->getCourseName() << " - " << entry->getRoomName() << endl;
         }
     }
+	cout<<"\n***********************************";
+}
 
+	  else if(num==3){
+  fstream studentwise_file;
+	studentwise_file.open("Student wise Timetable.txt",ios::out);
     //Student wise time table 
     map<string, vector<TimetableEntry*>> studentTimetable = timetable.getStudentWiseTimetable();
-    cout << "\n\nStudent-wise timetable:" << endl << endl;
+    cout << "\n~~~Student-wise timetable~~~" << endl << endl;
     for (auto pair : studentTimetable) {
         cout << pair.first << ":" << endl;
         for (TimetableEntry* entry : pair.second) {
             cout << "  " << entry->getTimeslot() << " - " << entry->getCourseName() << " - " << entry->getRoomName() << endl;
         }
     }
+ cout<<"\n***********************************";
+    studentwise_file.close();
+}
 
+	  else if(num==4){
     //Room wise and Lab wise 
     map<string, vector<TimetableEntry*>> roomTimetable = timetable.getRoomWiseTimetable();
-    cout << "\n\nRoom & Lab wise timetable:" << endl << endl;
+    cout << "\n~~~Room & Lab wise timetable~~~" << endl << endl;
     for (auto pair : roomTimetable) {
         cout << pair.first << ":" << endl;
         for (TimetableEntry* entry : pair.second) {
             cout << "  " << entry->getTimeslot() << " - " << entry->getTeacherName() << " - " << entry->getCourseName() << endl;
         }
+	   
+}
+		   cout<<"\n***********************************";
     }
 
+	  else if(num==5){
     // Who is teaching on any specific time and day (8:30 on Monday) ?
-    vector<string> teachersAtTime = timetable.getTeachersAtTime("Monday", "8:30");
-    cout << "\n\nTeachers teaching at 8:30 on Monday: " << endl;
+    vector<string> teachersAtTime = timetable.getTeachersAtTime("Monday", "8:30-10:25");
+    cout << "\n~~~Teachers teaching at 8:30 on Monday~~~" << endl;
     for (auto teacher : teachersAtTime) {
-        cout << teacher << " ";
+        cout << teacher << " "<<endl;
     }
-    cout << endl;
+    cout<<"\n***********************************";
+	  }
 
+	  else if(num==6){
     //What is the time table for specific day(Tuesday)?
     vector<string> timetableForTuesday = timetable.getTimetableForDay("Tuesday");
-    cout << "\n\nTimetable for Tuesday:" << endl << endl;
+    cout << "\n~~~Timetable for Tuesday~~~" << endl << endl;
     for (auto entry : timetableForTuesday) {
         cout << entry << endl;
     }
-
+		  cout<<"\n***********************************";
+	  }
+else{
+cout<<"***You EXITED the timetable system***";
+break;
+} 
+}
 
     delete teacher1;
     delete teacher2;
+    delete teacher3;
+    delete teacher4;
+    delete teacher5;
+    delete teacher6;
+	  
     delete course1;
     delete course2;
+    delete course3;
+    delete course4;
+    delete course5;
+    delete course7;
+    delete course8;
+	  
     delete room1;
     delete room2;
-    delete student1;
-    delete student2;
+    delete room3;
+    delete lab1;
+    delete lab2;
+    deleteStudents(students, count);
 
 }
-
