@@ -1,0 +1,25 @@
+Atqa Asma,BSE-2B
+Manahil Amjad,BSE-2B
+Muhammad Armaghan,BSE-2B
+Zohad Ahmed,BSE-2B
+Wajeeha khalid,BSE-2B
+Samreen,BSE-2A
+Ridha,BSE-2A
+Zainab Iqbal,BSE-2A
+Bilal,BSE-2A
+Tayabba,BSE-2A
+Arham,BSE-4
+Usman,BSE-4
+Fatima,BSE-4
+Ahsan,BSE-4
+Maryam,BSE-4
+Somana,BSE-6
+Ayesha,BSE-6
+Harris,BSE-6
+Fayzan,BSE-6
+Adnan,BSE-6
+Alizay,BSE-8
+Abdul Karim,BSE-8
+Mirza Abdullah,BSE-8
+Tarbiah,BSE-8
+Maryam Tanveer,BSE-8
